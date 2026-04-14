@@ -1,0 +1,181 @@
+/* ============================================
+   EXPERIENCE / TIMELINE STYLES
+   ============================================ */
+#experience { background: var(--color-bg); }
+
+.timeline {
+  position: relative;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: var(--space-8) 0;
+}
+
+/* Vertical center line */
+.timeline-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--color-primary) 10%,
+    var(--color-primary) 90%,
+    transparent
+  );
+  opacity: 0.3;
+}
+
+/* Timeline items */
+.timeline-item {
+  position: relative;
+  width: 45%;
+  margin-bottom: var(--space-10);
+}
+
+.timeline-left  { margin-right: auto; padding-right: var(--space-10); }
+.timeline-right { margin-left: auto;  padding-left:  var(--space-10); }
+
+/* Dot on the center line */
+.timeline-dot {
+  position: absolute;
+  top: 24px;
+  width: 16px;
+  height: 16px;
+}
+.timeline-left  .timeline-dot { right: -8px;  transform: translateX(50%); }
+.timeline-right .timeline-dot { left: -8px;   transform: translateX(-50%); }
+
+.dot-inner {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: var(--entry-color, var(--color-primary));
+  box-shadow:
+    0 0 0 4px rgba(var(--entry-color, #00f5ff), 0.15),
+    0 0 12px var(--entry-color, var(--color-primary));
+  animation: dotPulse 2.5s ease-in-out infinite;
+}
+
+/* Card */
+.timeline-card {
+  padding: var(--space-6);
+}
+
+.timeline-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.timeline-role {
+  font-size: var(--fs-lg);
+  color: var(--entry-color, var(--color-primary));
+  margin-bottom: var(--space-1);
+}
+
+.timeline-company {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.company-name {
+  font-size: var(--fs-base);
+  color: var(--color-text);
+  font-weight: var(--fw-medium);
+  font-family: var(--font-mono);
+}
+
+.company-location {
+  font-size: var(--fs-xs);
+  color: var(--color-text-dim);
+  font-family: var(--font-mono);
+}
+
+.timeline-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+.timeline-dates {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--color-text-dim);
+  white-space: nowrap;
+}
+
+/* Highlights list */
+.timeline-highlights {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+  padding-left: 0;
+}
+
+.timeline-highlight {
+  display: flex;
+  gap: var(--space-2);
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+
+.timeline-highlight span {
+  color: var(--entry-color, var(--color-primary));
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* Tags */
+.timeline-tags {
+  display: flex;
+  gap: var(--space-1);
+  flex-wrap: wrap;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border);
+}
+
+/* ── Responsive ──────────────────────────── */
+@media (max-width: 768px) {
+  .timeline-line { left: 20px; }
+
+  .timeline-item {
+    width: 100%;
+    padding-left: var(--space-12);
+    padding-right: 0;
+    margin-right: 0;
+    margin-left: 0;
+  }
+
+  .timeline-left,
+  .timeline-right {
+    padding-left: var(--space-12);
+    padding-right: 0;
+  }
+
+  .timeline-left  .timeline-dot,
+  .timeline-right .timeline-dot {
+    left: 12px;
+    right: auto;
+    transform: none;
+  }
+
+  .timeline-header { flex-direction: column; }
+  .timeline-meta   { align-items: flex-start; }
+}
+
+/* Timeline line is already defined above; reduce opacity further in dark mode */
+[data-theme="dark"] .timeline-line {
+  opacity: 0.35;
+}
