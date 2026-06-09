@@ -34,3 +34,6 @@ Thumbs.db
 # Local AI/assistant config (do not publish)
 .claude/
 .cursor/
+skills-lock.json
+.agents/
+CLAUDE.md
