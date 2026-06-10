@@ -18,7 +18,8 @@
 .about-img {
   width: 100%;
   max-width: 380px;
-  height: 460px;
+  aspect-ratio: 380 / 460;
+  height: auto;
   object-fit: cover;
   border-radius: 20px;
   border: 1px solid var(--color-border);
@@ -94,6 +95,8 @@
   font-size: var(--fs-md);
   color: var(--color-text-muted);
   line-height: 1.8;
+  text-align: justify;
+  hyphens: auto;
 }
 .about-bio strong { color: var(--color-text); font-weight: var(--fw-medium); }
 
@@ -131,6 +134,10 @@
 
 @media (max-width: 768px) {
   .about-facts { grid-template-columns: 1fr; }
-  .about-code-badge { right: 0; bottom: -16px; font-size: 0.65rem; }
+  .about-code-badge { right: 0; bottom: -16px; font-size: 0.65rem; max-width: calc(100% - 8px); }
   .about-years-badge { top: 0; left: 0; }
+}
+
+@media (max-width: 480px) {
+  .about-code-badge { font-size: 0.58rem; white-space: normal; line-height: 1.6; }
 }
