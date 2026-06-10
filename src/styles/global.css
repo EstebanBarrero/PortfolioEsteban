@@ -7,6 +7,8 @@ html {
   scroll-behavior: smooth;
   font-size: 16px;
   -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 html { transition: background-color 0.3s ease, color 0.3s ease; }
@@ -17,6 +19,7 @@ body {
   color: var(--color-text);
   line-height: 1.6;
   overflow-x: hidden;
+  overflow-x: clip;
   cursor: none;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
@@ -51,6 +54,8 @@ h1, h2, h3, h4, h5, h6 {
 p {
   color: var(--color-text-muted);
   line-height: 1.7;
+  text-align: justify;
+  hyphens: auto;
 }
 
 a {
@@ -140,6 +145,23 @@ ul  { list-style: none; }
   display: flex;
   align-items: center;
   gap: var(--space-4);
+}
+
+/* Theme + lang inside nav-links as a flex item */
+.nav-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  list-style: none;
+}
+
+/* Desktop: inline separator before controls */
+@media (min-width: 1081px) {
+  .nav-controls {
+    padding-left: var(--space-4);
+    margin-left: var(--space-2);
+    border-left: 1px solid var(--color-border);
+  }
 }
 
 
@@ -372,6 +394,8 @@ section {
   max-width: 600px;
   margin: 0 auto;
   line-height: 1.7;
+  text-align: justify;
+  hyphens: auto;
 }
 
 .btn {
@@ -597,28 +621,48 @@ section {
   .container { padding: 0 var(--space-6); }
 }
 
-@media (max-width: 768px) {
-  :root { --section-pad: var(--space-16); --fs-5xl: 3rem; --fs-4xl: 2.5rem; }
-
+/* Navbar collapses to hamburger — 6 links + logo + controls need ~1050px */
+@media (max-width: 1080px) {
   #navbar { padding: var(--space-4) var(--space-5); }
-  .nav-toggle { display: flex; }
+  .nav-toggle { display: flex; order: 5; }
 
   .nav-links {
-    position: fixed;
-    top: 68px; left: 0; right: 0;
+    position: absolute;
+    top: 100%; left: 0; right: 0;
     background: var(--color-bg-nav);
     backdrop-filter: blur(var(--blur));
+    -webkit-backdrop-filter: blur(var(--blur));
     flex-direction: column;
-    padding: var(--space-6);
-    gap: var(--space-4);
+    padding: var(--space-5) var(--space-6) var(--space-6);
+    gap: var(--space-1);
     border-bottom: 1px solid var(--color-border);
     transform: translateY(-120%);
     opacity: 0;
     transition: all var(--transition-base);
     pointer-events: none;
     box-shadow: var(--shadow-lg);
+    z-index: -1;
   }
   .nav-links.open { transform: translateY(0); opacity: 1; pointer-events: all; }
+
+  /* Each nav link gets more breathing room vertically */
+  .nav-links > li:not(.nav-controls) { padding: var(--space-2) 0; }
+
+  /* Controls section: separator + full-width row */
+  .nav-controls {
+    width: 100%;
+    margin-top: var(--space-3);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--color-border);
+    justify-content: flex-start;
+    gap: var(--space-3);
+  }
+
+  body.nav-open { overflow: hidden; }
+}
+
+@media (max-width: 768px) {
+  :root { --section-pad: var(--space-16); --fs-5xl: 3rem; --fs-4xl: 2.5rem; }
   .container { padding: 0 var(--space-5); }
 }
 
@@ -626,6 +670,13 @@ section {
   :root { --section-pad: var(--space-12); }
   body { cursor: auto; }
   #cursor-canvas { display: none; }
+  .container { padding: 0 var(--space-4); }
+}
+
+@media (max-width: 420px) {
+  .nav-logo { font-size: var(--fs-md); }
+  .nav-right { gap: var(--space-2); }
+  .lang-toggle { padding: 5px 10px; }
 }
 
 .form-group.has-error .form-input {
