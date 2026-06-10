@@ -50,7 +50,7 @@ export const translations = {
       coreTitle: 'Core Competencies',
       softLabel: 'beyond the code',
       softTitle: 'Soft Skills',
-      softSubtitle: 'Great software is built by great people these are the human qualities I bring to every team',
+      softSubtitle: 'I believe the best code comes from the best teamwork. These are the qualities I bring to every project.',
       softSkills: [
         {
         name: 'Leadership',
@@ -212,7 +212,7 @@ export const translations = {
       coreTitle: 'Competencias Clave',
       softLabel: 'más allá del código',
       softTitle: 'Habilidades Blandas',
-      softSubtitle: 'El gran software lo construye gran gente estas son las cualidades humanas que aporto a cada equipo',
+      softSubtitle: 'Creo que el mejor código sale del mejor trabajo en equipo. Estas son las cualidades con las que sumo a cada proyecto.',
       softSkills: [
         {
         name: 'Liderazgo',
