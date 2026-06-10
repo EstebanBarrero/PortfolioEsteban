@@ -1,0 +1,233 @@
+---
+interface Props { lang?: 'en' | 'es'; }
+const { lang = 'es' } = Astro.props;
+const isEn = lang === 'en';
+const canonicalURL = `https://estebanbarrero.dev/${lang}`;
+const title = isEn
+  ? 'Esteban Barrero | Full-Stack & AI Developer — Colombia'
+  : 'Esteban Barrero | Desarrollador Full-Stack & IA — Colombia';
+const description = isEn
+  ? 'Senior Full-Stack & AI Developer from Colombia. Specializing in NestJS, Angular, React, AWS, and LLM integrations with OpenAI and Anthropic Claude. 6+ years building scalable systems.'
+  : 'Desarrollador Full-Stack & IA Senior de Colombia. Especializado en NestJS, Angular, React, AWS e integraciones LLM con OpenAI y Claude. Más de 6 años construyendo sistemas escalables.';
+const ogLocale = isEn ? 'en_US' : 'es_CO';
+const ogLocaleAlt = isEn ? 'es_CO' : 'en_US';
+const ogImageAlt = isEn
+  ? 'Esteban Barrero — Full-Stack & AI Developer portfolio'
+  : 'Esteban Barrero — Portfolio Desarrollador Full-Stack & IA';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Person',
+      '@id': 'https://estebanbarrero.dev/#person',
+      'name': 'Esteban Barrero',
+      'jobTitle': isEn ? 'Senior Full-Stack & AI Developer' : 'Desarrollador Full-Stack & IA Senior',
+      'description': description,
+      'url': canonicalURL,
+      'address': {
+        '@type': 'PostalAddress',
+        'addressCountry': 'CO',
+        'addressRegion': 'Colombia',
+      },
+      'knowsAbout': [
+        'TypeScript', 'NestJS', 'Angular', 'React', 'Node.js',
+        'AWS', 'Docker', 'Kubernetes', 'PostgreSQL',
+        'OpenAI', 'Anthropic Claude', 'LLM', 'MCP', 'RAG',
+        'Python', 'Java', 'Spring Boot',
+      ],
+      'sameAs': [
+        'https://github.com/EstebanBarrero',
+        'https://www.linkedin.com/in/david-esteban-puentes-barrero',
+      ],
+    },
+    {
+      '@type': 'WebSite',
+      '@id': 'https://estebanbarrero.dev/#website',
+      'url': canonicalURL,
+      'name': title,
+      'description': description,
+      'inLanguage': lang,
+      'author': { '@id': 'https://estebanbarrero.dev/#person' },
+    },
+  ],
+};
+
+/* Global CSS — variables + animations imported transitively via global.css */
+import '../styles/global.css';
+/* Organisms */
+import '../styles/organisms/hero.css';
+import '../styles/organisms/about.css';
+import '../styles/organisms/skills.css';
+import '../styles/organisms/projects.css';
+import '../styles/organisms/experience.css';
+import '../styles/organisms/ai-showcase.css';
+import '../styles/organisms/contact.css';
+import '../styles/organisms/footer.css';
+/* Molecules */
+import '../styles/molecules/fact-card.css';
+import '../styles/molecules/stat-item.css';
+import '../styles/molecules/skill-card.css';
+import '../styles/molecules/soft-skill-card.css';
+import '../styles/molecules/key-skill-bar.css';
+import '../styles/molecules/project-card.css';
+import '../styles/molecules/experience-entry.css';
+import '../styles/molecules/terminal-widget.css';
+import '../styles/molecules/ai-card.css';
+import '../styles/molecules/llm-badge.css';
+import '../styles/molecules/contact-channel.css';
+import '../styles/molecules/social-link.css';
+---
+
+<!doctype html>
+<html lang={lang} data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/avatar.webp" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <!-- Primary SEO -->
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="keywords" content={isEn
+      ? 'Full-Stack Developer, AI Engineer, NestJS, Angular, React, AWS, LLM, MCP, Anthropic Claude, OpenAI, Colombia, TypeScript, Node.js'
+      : 'Desarrollador Full-Stack, Ingeniero IA, NestJS, Angular, React, AWS, LLM, MCP, Anthropic Claude, OpenAI, Colombia, TypeScript, Node.js'} />
+    <meta name="author" content="Esteban Barrero" />
+    <meta name="robots" content="index, follow, max-snippet:160, max-image-preview:large" />
+    <link rel="canonical" href={canonicalURL} />
+    <link rel="alternate" hreflang="es" href="https://estebanbarrero.dev/es" />
+    <link rel="alternate" hreflang="en" href="https://estebanbarrero.dev/en" />
+    <link rel="alternate" hreflang="x-default" href="https://estebanbarrero.dev/es" />
+    <meta name="theme-color" content="#0a0a0f" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content="https://estebanbarrero.dev/avatar.webp" />
+    <meta property="og:image:alt" content={ogImageAlt} />
+    <meta property="og:locale" content={ogLocale} />
+    <meta property="og:locale:alternate" content={ogLocaleAlt} />
+    <meta property="og:site_name" content="Esteban Barrero — Portfolio" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@EstebanBarrero" />
+    <meta name="twitter:creator" content="@EstebanBarrero" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content="https://estebanbarrero.dev/avatar.webp" />
+    <meta name="twitter:image:alt" content={ogImageAlt} />
+
+    <!-- Structured Data: Person + WebSite -->
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+    <!-- Critical loader styles — inline to show loader before CSS bundle fetches -->
+    <style>
+      #page-loader {
+        position: fixed; inset: 0; z-index: 999999;
+        background: #0a0a0f;
+        display: flex; align-items: center; justify-content: center;
+        transition: opacity 0.5s ease, visibility 0.5s ease;
+      }
+      #page-loader.loader-done { opacity: 0; visibility: hidden; pointer-events: none; }
+      .loader-inner { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+      .loader-logo {
+        font-family: 'Space Mono', monospace;
+        font-size: clamp(1.8rem, 4vw, 2.4rem);
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        color: #e8eaf0;
+        text-shadow: 0 0 30px rgba(0,245,255,0.4), 0 0 60px rgba(0,245,255,0.15);
+        animation: _loaderPulse 1.8s ease-in-out infinite;
+      }
+      .loader-bracket { color: #00f5ff; }
+      .loader-track { width: 180px; height: 2px; background: rgba(0,245,255,0.1); border-radius: 2px; overflow: hidden; }
+      .loader-fill {
+        height: 100%; width: 0;
+        background: linear-gradient(90deg, #00f5ff, #4080ff);
+        border-radius: 2px;
+        animation: _loaderFill 0.7s cubic-bezier(0.4,0,0.2,1) forwards;
+      }
+      .loader-hint { font-family: monospace; font-size: 0.75rem; color: rgba(255,255,255,0.3); letter-spacing: 0.12em; }
+      @keyframes _loaderFill { 0%{width:0} 60%{width:80%} 100%{width:100%} }
+      @keyframes _loaderPulse { 0%,100%{opacity:1} 50%{opacity:0.45} }
+    </style>
+
+    <!-- Preload critical image -->
+    <link rel="preload" as="image" href="/avatar.webp" />
+
+    <!-- Inline theme init — sync before CSS to prevent flash -->
+    <script is:inline>
+      (function () {
+        var t = localStorage.getItem('theme');
+        if (t === 'light' || t === 'dark') {
+          document.documentElement.setAttribute('data-theme', t);
+        } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      })();
+    </script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Page Loader -->
+    <div id="page-loader" aria-hidden="true" aria-label="Loading">
+      <div class="loader-inner">
+        <div class="loader-logo">
+          <span class="loader-bracket">&lt;</span><span class="loader-name">EST</span><span class="loader-bracket">/&gt;</span>
+        </div>
+        <div class="loader-track"><div class="loader-fill"></div></div>
+        <span class="loader-hint">Loading portfolio...</span>
+      </div>
+    </div>
+
+    <!-- Skip to content -->
+    <a href="#hero" class="skip-link">Skip to content</a>
+
+    <!-- Navigation -->
+    <nav id="navbar" role="navigation" aria-label="Main navigation">
+      <div class="nav-logo">
+        <span class="logo-bracket">&lt;</span>
+        <span class="logo-text">DAV-ESTEBAN</span>
+        <span class="logo-bracket">/&gt;</span>
+      </div>
+      <div class="nav-right">
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+        <ul class="nav-links" role="list">
+          <li><a href="#hero"        class="nav-link" data-i18n="nav.home">Home</a></li>
+          <li><a href="#about"       class="nav-link" data-i18n="nav.about">About</a></li>
+          <li><a href="#skills"      class="nav-link" data-i18n="nav.skills">Skills</a></li>
+          <li><a href="#projects"    class="nav-link" data-i18n="nav.projects">Projects</a></li>
+          <li><a href="#experience"  class="nav-link" data-i18n="nav.experience">Experience</a></li>
+          <li><a href="#ai-showcase" class="nav-link" data-i18n="nav.ai">AI</a></li>
+        </ul>
+        <button id="themeToggle" class="theme-toggle" aria-label="Switch to light mode"></button>
+        <button id="lang-toggle" class="lang-toggle" aria-label="Switch language">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14" aria-hidden="true" class="lang-icon">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+            <path d="M2 12h20"/>
+          </svg>
+          <span class="lang-label">{isEn ? 'ES' : 'EN'}</span>
+        </button>
+        <a href="#contact" class="nav-link cta-nav" data-i18n="nav.contact">Contact</a>
+      </div>
+    </nav>
+
+    <!-- App content -->
+    <slot />
+  </body>
+</html>

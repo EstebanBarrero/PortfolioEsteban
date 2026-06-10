@@ -1,186 +1,205 @@
-# Esteban — Full-Stack & AI Developer Portfolio
+# David Esteban Puentes Barrero — Portfolio
 
-A modern, dark-themed personal portfolio built with **Vite + TypeScript** (no React/Vue — pure vanilla TS).
+**Live:** [estebanbarrero.dev](https://estebanbarrero.dev)
 
-## 🚀 Quick Start
-
-```bash
-# 1. Install dependencies
-npm install
-
-# 2. Start dev server
-npm run dev
-
-# 3. Build for production
-npm run build
-
-# 4. Preview production build
-npm run preview
-```
+Personal portfolio for a Full-Stack & AI Engineer. Bilingual (Spanish / English), dark-theme-first, statically generated, zero-runtime except for a single Preact island.
 
 ---
 
-## 📁 Project Structure
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Framework | Astro 6 (static output) |
+| UI Runtime | Preact 10 + `@preact/signals` |
+| Language | TypeScript 5 |
+| Styling | Plain CSS custom properties |
+| i18n | Astro built-in i18n routing (`/es`, `/en`) |
+| Sitemap | `@astrojs/sitemap` (es-CO / en-US) |
+| Deployment | Vercel |
+| Build tool | Vite 5 (via Astro) |
+
+---
+
+## Features
+
+- **Bilingual routing** — `/` redirects to `/es` or `/en` based on `localStorage` → browser language → default `es`
+- **Dark / light theme** — persisted in `localStorage`, respects `prefers-color-scheme`
+- **Typewriter hero** — phrases driven by `useTypewriter` hook + `appEvents` bus
+- **Scroll animations** — Intersection Observer, no JS library
+- **Custom cursor** — desktop glow effect via `src/shared/cursor.ts`
+- **Contact form** — submits to [formsubmit.co](https://formsubmit.co) (no backend required)
+- **Responsive** — mobile-first, CSS-only breakpoints
+- **Strict security headers** — `X-Frame-Options`, `CSP`, `Referrer-Policy` via `vercel.json`
+- **Auto sitemap** — generated at build time for both locales
+
+---
+
+## Local Development
+
+```bash
+npm install
+npm run dev      # Astro dev server with HMR → http://localhost:4321
+npm run build    # Static build → dist/
+npm run preview  # Serve dist/ locally
+```
+
+No test runner is configured.
+
+---
+
+## Architecture
 
 ```
 src/
-├── assets/
-│   ├── avatar.jpg          ← Replace with your photo
-│   ├── cv.pdf              ← Replace with your CV
-│   └── projects/           ← Add project screenshots here
-│       ├── ai-chat.jpg
-│       ├── serverless.jpg
-│       └── ...
-├── components/             ← One TS + CSS file per section
-│   ├── Hero.ts / Hero.css
-│   ├── About.ts / About.css
-│   ├── Skills.ts / Skills.css
-│   ├── Projects.ts / Projects.css
-│   ├── Experience.ts / Experience.css
-│   ├── AIShowcase.ts / AIShowcase.css
-│   ├── Contact.ts / Contact.css
-│   └── Footer.ts / Footer.css
-├── data/                   ← Edit these to update content
-│   ├── skills.ts           ← All tech skills + proficiency
-│   ├── projects.ts         ← Project cards + details
-│   └── experience.ts       ← Work history timeline
-├── styles/                 ← Global design system
-│   ├── global.css
-│   ├── variables.css       ← Design tokens (colors, spacing)
-│   └── animations.css      ← All keyframes + utility classes
-├── utils/
-│   ├── typewriter.ts       ← Typewriter effect class
-│   ├── scrollAnimations.ts ← Intersection Observer animations
-│   └── cursor.ts           ← Custom glowing cursor
-└── main.ts                 ← App entry point
+├── pages/
+│   ├── index.astro          ← Redirect to /es or /en
+│   ├── es/index.astro       ← Spanish page shell
+│   └── en/index.astro       ← English page shell
+├── layouts/
+│   └── Layout.astro         ← <head>, SEO meta, navbar, loader, CSS imports
+├── App.tsx                  ← Preact island root (client:only="preact")
+├── components/
+│   ├── atoms/               ← Button, Badge, Avatar, LevelDots, TechTag, ...
+│   ├── molecules/           ← ProjectCard, SkillCard, ExperienceEntry, ...
+│   ├── organisms/           ← Hero, About, Skills, Projects, Experience,
+│   │                           AIShowcase, Contact, Footer (TSX only, no .css)
+│   ├── templates/           ← PageLayout, SectionLayout
+│   └── pages/               ← HomePage (composes all 8 organisms)
+├── hooks/                   ← useAppInit, useTypewriter, useCarousel,
+│                               useTerminalReveal, useContactForm
+├── services/                ← LanguageService, ThemeService,
+│                               CarouselService, ContactService
+├── domain/
+│   └── index.ts             ← All TypeScript interfaces (Project, Skill,
+│                               Experience, Stat, Lang, Theme)
+├── shared/                  ← EventBus, cursor, scrollAnimations, icons, color
+├── data/                    ← Typed content arrays (edit to update content)
+└── styles/                  ← All CSS — global.css, variables.css,
+                                animations.css, molecules/, organisms/
 ```
 
----
-
-## 🖼️ Replacing Images
-
-### Profile Photo
-1. Add your photo as `src/assets/avatar.jpg`
-2. Recommended: **400×400px square**, JPG/PNG
-3. It's used in both the Hero and About sections
-
-### Project Screenshots
-1. Add screenshots to `src/assets/projects/`
-2. Reference them in `src/data/projects.ts`:
-   ```ts
-   image: '/assets/projects/my-project.jpg'
-   ```
-3. Recommended: **800×450px (16:9)**, JPG/PNG
-
-### CV
-1. Add your CV as `public/assets/cv.pdf`
-2. The Download CV button in the Hero section links to `/assets/cv.pdf`
+**Key architectural rules:**
+- CSS lives exclusively in `src/styles/` — never co-located with components
+- Preact signals (`langSignal`, `t`) are singletons — reactive across the island
+- Lang switch = full page navigation to `/{lang}`, not a signal swap
+- `appEvents` (`EventBus`) bridges Astro-rendered navbar/loader ↔ Preact island for `theme:changed`, `lang:changed`, `typewriter:phrases`
+- Content updates → edit `src/data/` only; no component changes needed
 
 ---
 
-## ✏️ Updating Content
+## Updating Content
 
-### Add a New Project
-Edit `src/data/projects.ts` and add to the `projects` array:
+All content is driven by typed data files. No component edits needed for content changes.
+
+### Projects — `src/data/projects.ts`
 
 ```ts
 {
-  id: 'my-new-project',
-  title: 'My Awesome Project',
-  description: 'Short one-liner description',
-  longDescription: 'Full description shown on hover/expand',
-  image: '/assets/projects/my-project.jpg',
-  tags: ['React', 'NestJS', 'AWS'],
-  category: 'web', // 'web' | 'ai' | 'api' | 'devops'
-  github: 'https://github.com/yourusername/repo',
-  demo: 'https://myproject.com',
-  featured: false,
+  id: 'my-project',
+  title: 'My Project',
+  description: 'Short EN description',
+  descriptionEs: 'Descripción corta en español',
+  longDescription: 'Full detail shown in expanded card',
+  image: '/my-project.webp',           // file in public/
+  tags: ['React', 'FastAPI', 'AWS'],
+  category: 'web',                     // 'web' | 'ai' | 'api' | 'devops'
+  github: 'https://github.com/...',
+  demo: 'https://...',
+  featured: true,
+  accentColor: '#00f5ff',
+  period: 'Jan 2025 – Apr 2025',
+}
+```
+
+### Skills — `src/data/skills.ts`
+
+```ts
+{
+  name: 'Redis',
+  icon: 'database',        // Lucide icon name used via src/shared/icons.ts
+  level: 4,                // 1–5 (rendered as filled dots)
+  color: '#dc382d',
+  category: 'backend',     // 'frontend'|'backend'|'ai'|'devops'|'tools'|'soft'
+}
+```
+
+### Experience — `src/data/experience.ts`
+
+```ts
+{
+  id: 'exp-company',
+  role: 'Senior Engineer',
+  company: 'Acme Corp',
+  location: 'Remote',
+  startDate: 'Jan 2024',
+  endDate: 'Present',
+  type: 'full-time',       // 'full-time'|'freelance'|'contract'|'internship'
+  highlights: ['EN bullet 1', 'EN bullet 2'],
+  highlightsEs: ['ES bullet 1', 'ES bullet 2'],
+  tags: ['React', 'AWS'],
   accentColor: '#00f5ff',
 }
 ```
 
-### Add a New Skill
-Edit `src/data/skills.ts` and add to the `skills` array:
+### Other content locations
 
-```ts
-{
-  name: 'New Tech',
-  icon: '🔧',
-  level: 4,        // 1–5 dots
-  color: '#ff0000', // hover glow color
-  category: 'backend', // 'frontend'|'backend'|'ai'|'devops'|'tools'
-}
-```
+| What | Where |
+|------|-------|
+| i18n strings (all UI text) | `src/data/translations.ts` |
+| Shared constants (email, URLs, stats) | `src/data/constants.ts` |
+| Hero typewriter phrases | `src/hooks/useTypewriter.ts` |
+| Bio text | `src/components/organisms/About.tsx` |
+| Social links | `src/components/organisms/Footer.tsx` |
+| SEO meta / Open Graph | `src/layouts/Layout.astro` |
 
-### Add Work Experience
-Edit `src/data/experience.ts` and add to the `experiences` array:
+### Assets
 
-```ts
-{
-  id: 'exp-5',
-  role: 'Your Role',
-  company: 'Company Name',
-  location: 'City, Country',
-  startDate: 'Jan 2020',
-  endDate: 'Dec 2021',
-  type: 'full-time',
-  highlights: [
-    'Achievement or responsibility bullet point',
-    'Another bullet point',
-  ],
-  tags: ['Tech', 'Stack', 'Used'],
-  accentColor: '#00f5ff',
-}
-```
-
-### Update Personal Info
-- **Name / greeting:** `src/components/Hero.ts` — change "Esteban"
-- **Bio text:** `src/components/About.ts`
-- **Contact info:** `src/components/Contact.ts` — update email, WhatsApp, LinkedIn
-- **Social links:** `src/components/Footer.ts`
-- **Typewriter phrases:** `src/components/Hero.ts` → `initHero()` function
+| Asset | Path |
+|-------|------|
+| Profile photo | `public/avatar.webp` |
+| CV / Resume | `public/assets/cv.pdf` |
+| Project screenshots | `public/` (reference as `/filename.webp` in `projects.ts`) |
 
 ---
 
-## 🎨 Customizing Design
+## Design Tokens
 
-All design tokens live in `src/styles/variables.css`:
+All visual variables are in `src/styles/variables.css`. Retheme the entire site by editing values there:
 
 ```css
---color-cyan:  #00f5ff;   /* Primary accent */
---color-lime:  #aaff00;   /* Secondary accent */
---color-bg:    #0a0a0f;   /* Dark background */
+--color-cyan:    #00f5ff;   /* Primary accent */
+--color-lime:    #aaff00;   /* Secondary accent */
+--color-bg:      #0a0a0f;   /* Dark background */
+--color-surface: #111118;   /* Card / surface */
 ```
 
-Change these to retheme the entire site instantly.
-
 ---
 
-## 📦 Tech Stack
+## Deployment
 
-- **Vite 5** — Lightning-fast dev server + build
-- **TypeScript** — Type-safe vanilla JS
-- **Pure CSS** — CSS custom properties, animations, glassmorphism
-- **Intersection Observer API** — Scroll animations
-- **No runtime dependencies** — Zero framework overhead
+The site deploys automatically to Vercel on push to `main`. Static output is in `dist/` after `npm run build`.
 
----
+Security headers are configured in `vercel.json`:
+- `X-Frame-Options: DENY`
+- `X-Content-Type-Options: nosniff`
+- `Content-Security-Policy` (strict — allows only formsubmit.co for `connect-src`)
+- `Permissions-Policy` — camera, microphone, geolocation disabled
 
-## 🌐 Deployment
+For manual deploy to any static host:
 
 ```bash
 npm run build
-# Outputs to /dist — deploy anywhere static files are served
-
-# Netlify, Vercel, GitHub Pages, AWS S3+CloudFront all work
-```
-
-For AWS S3 + CloudFront:
-```bash
-aws s3 sync dist/ s3://your-bucket --delete
-aws cloudfront create-invalidation --distribution-id YOUR_ID --paths "/*"
+# Upload dist/ to your host (S3, Netlify, GitHub Pages, etc.)
 ```
 
 ---
 
-Built with Vite + TypeScript + ❤️ from Medellín 🇨🇴
+## Projects Showcased
+
+| Project | Stack | Status |
+|---------|-------|--------|
+| [Productos Autóctonos](https://www.productosautoctonos.shop) | Astro, React, Django REST, PostgreSQL, AWS EC2, Docker | Live |
+| [Coffee & Chill](https://coffee-and-chill-frontend.vercel.app/login) | React, FastAPI, PostgreSQL, Redis, SSE, Docker | Live |
+| SCADA Alarm System | FastAPI, Pandas, SQLAlchemy, React, Tremor, Docker | Private |
+| Pandora — Programa de Fuego | Express, PostgreSQL, Redis, Apple/Google Wallet, Docker | In progress |

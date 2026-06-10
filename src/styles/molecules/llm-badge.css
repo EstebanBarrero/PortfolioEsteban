@@ -1,0 +1,25 @@
+.llm-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-bg-glass);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  transition: all var(--transition-base);
+  cursor: default;
+}
+
+.llm-item:hover {
+  border-color: var(--color-border-hover);
+  box-shadow: var(--shadow-sm), 0 0 12px var(--accent-alpha);
+  transform: translateY(-2px);
+}
+
+.llm-icon  { display: flex; align-items: center; justify-content: center; color: var(--llm-color, currentColor); }
+.llm-label {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  letter-spacing: 0.03em;
+}

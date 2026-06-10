@@ -1,0 +1,15 @@
+---
+// Client-side redirect: prefer stored lang → browser lang → default 'es'
+---
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <script is:inline>
+      var lang = localStorage.getItem('lang');
+      if (!lang) lang = (navigator.language || '').startsWith('en') ? 'en' : 'es';
+      window.location.replace('/' + lang);
+    </script>
+  </head>
+  <body></body>
+</html>
