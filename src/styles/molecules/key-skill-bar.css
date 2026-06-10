@@ -1,0 +1,50 @@
+.key-skill-row { display: flex; flex-direction: column; gap: var(--space-2); }
+
+.key-skill-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.key-skill-name {
+  font-family: var(--font-sans);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  color: var(--color-text-muted);
+}
+
+.key-skill-percent {
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  color: var(--color-primary);
+  font-weight: var(--fw-bold);
+}
+
+.progress-bar {
+  height: 8px;
+  background: var(--color-bg);
+  border-radius: 99px;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+  box-shadow: 0 0 8px var(--color-primary-dim);
+  position: relative;
+  transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  right: 0; top: 50%;
+  transform: translateY(-50%);
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  box-shadow: 0 0 8px var(--color-primary-glow);
+}

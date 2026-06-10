@@ -1,0 +1,67 @@
+.contact-availability {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  color: var(--color-secondary);
+}
+
+.avail-dot {
+  width: 10px; height: 10px;
+  background: var(--color-secondary);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--color-secondary);
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+.contact-channels { display: flex; flex-direction: column; gap: var(--space-3); }
+
+.contact-channel {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  background: var(--color-bg-glass);
+  border: 1px solid var(--color-border);
+  border-radius: var(--card-radius);
+  color: inherit;
+  transition: all var(--transition-base);
+  backdrop-filter: blur(8px);
+}
+
+.contact-channel:hover {
+  border-color: var(--color-border-hover);
+  background: var(--color-primary-dim);
+  transform: translateX(6px);
+  box-shadow: var(--shadow-glow);
+}
+
+.channel-icon { display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--color-primary); }
+
+.channel-info { display: flex; flex-direction: column; gap: 2px; }
+
+.channel-label {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--color-text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.channel-value { font-size: var(--fs-sm); color: var(--color-text-muted); font-family: var(--font-mono); }
+.contact-channel:hover .channel-value { color: var(--color-primary); }
+
+.contact-location {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  margin-top: var(--space-2);
+}
+.contact-location:hover { transform: none; }
+
+.location-pin { display: flex; align-items: center; color: var(--color-primary); flex-shrink: 0; }
+
+.location-city { font-family: var(--font-mono); font-size: var(--fs-sm); color: var(--color-text); font-weight: var(--fw-medium); }
+.location-tz   { font-family: var(--font-mono); font-size: var(--fs-xs); color: var(--color-text-dim); margin-top: 2px; }

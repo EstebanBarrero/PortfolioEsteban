@@ -1,0 +1,49 @@
+.soft-skill-card {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  transition: all var(--transition-base);
+  border-left: 3px solid transparent;
+}
+
+.soft-skill-card:hover {
+  border-left-color: var(--soft-color, var(--color-primary));
+  transform: translateX(4px) translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.soft-skill-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  flex-shrink: 0;
+  transition: transform var(--transition-spring), box-shadow var(--transition-base);
+  border: 1px solid var(--color-border);
+}
+.soft-skill-card:hover .soft-skill-icon-wrap {
+  transform: scale(1.1) rotate(-4deg);
+  box-shadow: 0 4px 16px var(--accent-alpha);
+}
+
+.soft-skill-icon { display: flex; align-items: center; justify-content: center; color: var(--soft-color, currentColor); }
+
+.soft-skill-body { flex: 1; display: flex; flex-direction: column; gap: var(--space-1); }
+
+.soft-skill-name {
+  font-family: var(--font-sans);
+  font-size: var(--fs-base);
+  font-weight: var(--fw-semi);
+  color: var(--color-text);
+  transition: color var(--transition-fast);
+}
+.soft-skill-card:hover .soft-skill-name { color: var(--soft-color, var(--color-primary)); }
+
+.soft-skill-desc {
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}

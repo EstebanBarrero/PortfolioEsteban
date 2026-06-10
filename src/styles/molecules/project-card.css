@@ -1,0 +1,171 @@
+.pcard {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg);
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1.5px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.40s ease;
+}
+
+.pcard:hover { transform: translateY(-6px); box-shadow: 0 20px 60px rgba(0,0,0,0.13); }
+
+.pcard.active {
+  border-color: color-mix(in srgb, var(--pcard-color) 65%, transparent);
+  box-shadow:
+    var(--shadow-sm),
+    0 0 0 1px color-mix(in srgb, var(--pcard-color) 30%, transparent),
+    0 0 40px color-mix(in srgb, var(--pcard-color) 18%, transparent);
+}
+
+[data-theme="dark"] .pcard { background: rgb(13, 14, 24); }
+
+.pcard-image {
+  position: relative;
+  height: 260px;
+  flex-shrink: 0;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--pcard-color) 10%, var(--color-bg-secondary));
+}
+
+.pcard-image img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  transition: transform 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.pcard:hover .pcard-image img { transform: scale(1.06); }
+.pcard--contain .pcard-image img { object-fit: contain; object-position: center; }
+.pcard--contain:hover .pcard-image img { transform: none; }
+
+.pcard-image::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 64px;
+  background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.18));
+  pointer-events: none;
+}
+
+.pcard-image.pcard-img-err img { opacity: 0; }
+.pcard-image.pcard-img-err::before {
+  content: '🖥️';
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2.5rem; opacity: 0.20;
+}
+
+.pcard-chip {
+  position: absolute;
+  top: 14px; left: 14px;
+  z-index: 2;
+  font-family: var(--font-mono);
+  font-size: 0.60rem;
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.95);
+  background: rgba(0,0,0,0.52);
+  backdrop-filter: blur(12px) saturate(150%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+  padding: 5px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.14);
+  user-select: none;
+}
+
+.pcard-body { padding: 28px 28px 24px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+
+.pcard-num {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: var(--fw-bold);
+  color: var(--pcard-color);
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+}
+.pcard-cat { opacity: 0.62; }
+
+.pcard-period {
+  font-family: var(--font-mono);
+  font-size: 0.60rem;
+  color: var(--color-text-dim);
+  letter-spacing: 0.08em;
+  margin-top: -4px;
+}
+
+.pcard-title {
+  font-size: clamp(1.1rem, 1.5vw, 1.30rem);
+  font-weight: var(--fw-bold);
+  color: var(--color-text);
+  line-height: 1.25;
+}
+
+.pcard-desc {
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+  line-height: 1.72;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex: 1;
+}
+
+.pcard-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-top: 18px;
+  margin-top: auto;
+  border-top: 1px solid var(--color-border);
+}
+
+.pcard-link {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: var(--fw-bold);
+  color: var(--pcard-color);
+  text-decoration: none;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: opacity 0.2s;
+  white-space: nowrap;
+}
+.pcard-link:hover { opacity: 0.65; }
+
+.pcard-link--locked {
+  cursor: not-allowed;
+  opacity: 0.35;
+  user-select: none;
+}
+.pcard-link--locked::after {
+  content: ' ⊘';
+  font-size: 0.85em;
+}
+.pcard-link--locked:hover { opacity: 0.35; }
+
+.pcard-coming {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--pcard-color);
+  opacity: 0.72;
+  letter-spacing: 0.04em;
+}
+
+.pcard-tech {
+  font-family: var(--font-mono);
+  font-size: 0.63rem;
+  color: var(--color-text-dim);
+  letter-spacing: 0.04em;
+  text-align: right;
+  white-space: nowrap;
+}
+
+@media (max-width: 900px) { .pcard-image { height: 220px; } .pcard-body { padding: 22px 22px 20px; } }
+@media (max-width: 639px) { .pcard-image { height: 200px; } .pcard-body { padding: 20px 20px 18px; gap: 8px; } .pcard-desc { -webkit-line-clamp: 2; } }
