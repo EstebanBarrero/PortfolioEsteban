@@ -13,7 +13,7 @@ Personal portfolio for a Full-Stack & AI Engineer. Bilingual (Spanish / English)
 | Framework | Astro 6 (static output) |
 | UI Runtime | Preact 10 + `@preact/signals` |
 | Language | TypeScript 5 |
-| Styling | Plain CSS — custom properties, no utility framework |
+| Styling | Plain CSS custom properties |
 | i18n | Astro built-in i18n routing (`/es`, `/en`) |
 | Sitemap | `@astrojs/sitemap` (es-CO / en-US) |
 | Deployment | Vercel |
@@ -203,7 +203,3 @@ npm run build
 | [Coffee & Chill](https://coffee-and-chill-frontend.vercel.app/login) | React, FastAPI, PostgreSQL, Redis, SSE, Docker | Live |
 | SCADA Alarm System | FastAPI, Pandas, SQLAlchemy, React, Tremor, Docker | Private |
 | Pandora — Programa de Fuego | Express, PostgreSQL, Redis, Apple/Google Wallet, Docker | In progress |
-
----
-
-Built with Astro + Preact — [estebanbarrero.dev](https://estebanbarrero.dev)
