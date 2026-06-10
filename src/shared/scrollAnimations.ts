@@ -141,17 +141,19 @@ export function initSmoothScroll(): void {
       const target = document.querySelector(href);
       if (!target) return;
 
-      const navHeight = document.getElementById('navbar')?.offsetHeight ?? 70;
-      window.scrollTo({
-        top: target.getBoundingClientRect().top + window.scrollY - navHeight,
-        behavior: 'smooth',
-      });
-
+      // Unlock body scroll before scrolling — overflow:hidden blocks scrollTo
       const navLinks = document.querySelector('.nav-links');
       const navToggle = document.getElementById('navToggle');
       navLinks?.classList.remove('open');
       navToggle?.classList.remove('active');
       navToggle?.setAttribute('aria-expanded', 'false');
+      document.body.classList.remove('nav-open');
+
+      const navHeight = document.getElementById('navbar')?.offsetHeight ?? 70;
+      window.scrollTo({
+        top: target.getBoundingClientRect().top + window.scrollY - navHeight,
+        behavior: 'smooth',
+      });
     });
   });
 }
