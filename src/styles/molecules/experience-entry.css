@@ -21,6 +21,7 @@
   border-radius: 50%;
   background: var(--entry-color, var(--color-primary));
   box-shadow: 0 0 0 4px rgba(var(--entry-color, #00f5ff), 0.15), 0 0 12px var(--entry-color, var(--color-primary));
+  will-change: box-shadow;
   animation: dotPulse 2.5s ease-in-out infinite;
 }
 

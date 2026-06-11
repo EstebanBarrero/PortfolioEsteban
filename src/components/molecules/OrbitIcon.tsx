@@ -1,3 +1,4 @@
+import { memo } from 'preact/compat';
 import { Icon } from '../atoms/Icon';
 
 interface OrbitIconProps {
@@ -8,7 +9,7 @@ interface OrbitIconProps {
   ring: 'inner' | 'outer';
 }
 
-export function OrbitIcon({ icon, label, color, orbitDelay, ring }: OrbitIconProps) {
+export const OrbitIcon = memo(function OrbitIcon({ icon, label, color, orbitDelay, ring }: OrbitIconProps) {
   const ringClass = ring === 'inner' ? 'orbit-inner-icon' : 'orbit-outer-icon';
   return (
     <div
@@ -19,4 +20,4 @@ export function OrbitIcon({ icon, label, color, orbitDelay, ring }: OrbitIconPro
       <Icon name={icon} size={18} />
     </div>
   );
-}
+});

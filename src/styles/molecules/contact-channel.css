@@ -22,12 +22,11 @@
   align-items: center;
   gap: var(--space-4);
   padding: var(--space-4);
-  background: var(--color-bg-glass);
+  background: var(--color-bg-card);
   border: 1px solid var(--color-border);
   border-radius: var(--card-radius);
   color: inherit;
   transition: all var(--transition-base);
-  backdrop-filter: blur(8px);
 }
 
 .contact-channel:hover {

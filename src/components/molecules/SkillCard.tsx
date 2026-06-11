@@ -1,13 +1,14 @@
+import { memo } from 'preact/compat';
 import { Icon } from '../atoms/Icon';
 import { LevelDots } from '../atoms/LevelDots';
 import type { Skill } from '../../domain';
 
-export function SkillCard({ skill, active }: { skill: Skill; active: boolean }) {
+export const SkillCard = memo(function SkillCard({ skill }: { skill: Skill }) {
   return (
     <div
       class="skill-card glass-card"
       data-category={skill.category}
-      style={`--skill-color:${skill.color};${!active ? ' display:none;' : ''}`}
+      style={`--skill-color:${skill.color};`}
       role="listitem"
       aria-label={`${skill.name}, level ${skill.level} of 5`}
     >
@@ -19,4 +20,4 @@ export function SkillCard({ skill, active }: { skill: Skill; active: boolean }) 
       <div class="skill-glow" aria-hidden="true" />
     </div>
   );
-}
+});

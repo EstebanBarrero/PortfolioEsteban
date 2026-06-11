@@ -1,3 +1,4 @@
+import { memo } from 'preact/compat';
 import { Icon } from '../atoms/Icon';
 import { TechTag } from '../atoms/TechTag';
 
@@ -9,7 +10,7 @@ interface AICardProps {
   tags: string[];
 }
 
-export function AICard({ icon, color, title, desc, tags }: AICardProps) {
+export const AICard = memo(function AICard({ icon, color, title, desc, tags }: AICardProps) {
   return (
     <div class="ai-card glass-card reveal" style={`--card-accent:${color};`}>
       <div class="ai-card-icon" aria-hidden="true" style={`color:${color};`}>
@@ -22,4 +23,4 @@ export function AICard({ icon, color, title, desc, tags }: AICardProps) {
       </div>
     </div>
   );
-}
+});

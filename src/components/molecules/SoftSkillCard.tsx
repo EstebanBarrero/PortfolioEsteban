@@ -1,3 +1,4 @@
+import { memo } from 'preact/compat';
 import { Icon } from '../atoms/Icon';
 import { hexToRgb } from '../../shared/color';
 import type { SoftSkill } from '../../domain';
@@ -9,7 +10,7 @@ interface SoftSkillCardProps {
   desc: string;
 }
 
-export function SoftSkillCard({ skill, index, name, desc }: SoftSkillCardProps) {
+export const SoftSkillCard = memo(function SoftSkillCard({ skill, index, name, desc }: SoftSkillCardProps) {
   return (
     <div
       class="soft-skill-card glass-card"
@@ -28,4 +29,4 @@ export function SoftSkillCard({ skill, index, name, desc }: SoftSkillCardProps) 
       </div>
     </div>
   );
-}
+});

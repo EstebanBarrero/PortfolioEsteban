@@ -1,3 +1,4 @@
+import { memo } from 'preact/compat';
 import { Icon } from '../atoms/Icon';
 import { Badge } from '../atoms/Badge';
 import { TechTag } from '../atoms/TechTag';
@@ -11,7 +12,7 @@ const TYPE_LABELS: Record<string, { en: string; es: string }> = {
   'internship':  { en: 'Internship', es: 'Pasantía'        },
 };
 
-export function ExperienceEntry({ exp, index }: { exp: Experience; index: number }) {
+export const ExperienceEntry = memo(function ExperienceEntry({ exp, index }: { exp: Experience; index: number }) {
   const side = index % 2 === 0 ? 'left' : 'right';
   const isEs = langSignal.value === 'es';
   const highlights = isEs ? (exp.highlightsEs ?? exp.highlights) : exp.highlights;
@@ -64,4 +65,4 @@ export function ExperienceEntry({ exp, index }: { exp: Experience; index: number
       </article>
     </div>
   );
-}
+});
