@@ -1,7 +1,23 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { App } from '../../App';
+import HeroSection from '../../components/organisms/HeroSection.astro';
+import AboutSection from '../../components/organisms/AboutSection.astro';
+import ExperienceSection from '../../components/organisms/ExperienceSection.astro';
+import AIShowcaseSection from '../../components/organisms/AIShowcaseSection.astro';
+import FooterSection from '../../components/organisms/FooterSection.astro';
+import { AppInit } from '../../components/templates/AppInit';
+import { Skills } from '../../components/organisms/Skills';
+import { Projects } from '../../components/organisms/Projects';
+import { Contact } from '../../components/organisms/Contact';
 ---
 <Layout lang="es">
-  <App client:only="preact" lang="es" />
+  <HeroSection lang="es" />
+  <AboutSection lang="es" />
+  <Skills client:visible lang="es" />
+  <Projects client:visible lang="es" />
+  <ExperienceSection lang="es" />
+  <AIShowcaseSection lang="es" />
+  <Contact client:visible lang="es" />
+  <FooterSection lang="es" />
+  <AppInit client:load lang="es" />
 </Layout>
