@@ -58,6 +58,12 @@
 }
 .proj-arrow--prev { left: 8px; }
 .proj-arrow--next { right: 8px; }
+.proj-arrow:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 35%, transparent);
+  opacity: 1;
+}
 @media (max-width: 639px) { .proj-arrow { display: none; } }
 
 .proj-dots-row {
@@ -102,6 +108,11 @@
 
 .proj-dot:hover {
   background: color-mix(in srgb, var(--dot-color, var(--accent)) 60%, var(--color-border));
+  transform: scaleY(1.6);
+}
+.proj-dot:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--dot-color, var(--accent)) 55%, transparent);
   transform: scaleY(1.6);
 }
 

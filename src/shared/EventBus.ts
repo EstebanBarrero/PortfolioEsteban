@@ -1,6 +1,8 @@
 type Handler<T> = (data: T) => void;
 
 export class EventBus<Events extends Record<string, unknown>> {
+  // Internal map uses `any` — heterogeneous event → handler map; public API is fully typed
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private _handlers = new Map<keyof Events, Set<Handler<any>>>();
 
   on<K extends keyof Events>(event: K, handler: Handler<Events[K]>): () => void {

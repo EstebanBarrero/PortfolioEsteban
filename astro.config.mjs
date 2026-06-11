@@ -17,6 +17,9 @@ export default defineConfig({
         defaultLocale: 'es',
         locales: { es: 'es-CO', en: 'en-US' },
       },
+      changefreq: 'monthly',
+      priority: 0.8,
+      lastmod: new Date(),
     }),
   ],
   vite: {

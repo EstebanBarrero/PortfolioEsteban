@@ -1,3 +1,4 @@
+import { memo } from 'preact/compat';
 import type { Project } from '../../domain';
 import { langSignal } from '../../services/LanguageService';
 
@@ -6,7 +7,7 @@ interface ProjectCardProps {
   index: number;
 }
 
-export function ProjectCard({ project: p, index }: ProjectCardProps) {
+export const ProjectCard = memo(function ProjectCard({ project: p, index }: ProjectCardProps) {
   const num = String(index + 1).padStart(2, '0');
   const catLabel = p.category.toUpperCase();
   const description = langSignal.value === 'es' ? (p.descriptionEs ?? p.description) : p.description;
@@ -34,7 +35,11 @@ export function ProjectCard({ project: p, index }: ProjectCardProps) {
         <img
           src={p.image}
           alt={p.title}
+          width={400}
+          height={260}
           loading={index === 0 ? 'eager' : 'lazy'}
+          decoding={index === 0 ? 'sync' : 'async'}
+          fetchpriority={index === 0 ? 'high' : 'auto'}
           onError={(e) => (e.currentTarget as HTMLImageElement).closest('.pcard-image')?.classList.add('pcard-img-err')}
         />
       </div>
@@ -50,4 +55,4 @@ export function ProjectCard({ project: p, index }: ProjectCardProps) {
       </div>
     </div>
   );
-}
+});

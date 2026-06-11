@@ -130,6 +130,41 @@ export function initScrollAnimations(): void {
   );
 
   document.querySelectorAll('[data-stagger]').forEach((p) => staggerObserver.observe(p));
+
+  // Terminal widget reveal
+  const terminalObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          (entry.target as HTMLElement).classList.add('terminal-animate');
+          terminalObserver.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.4 }
+  );
+  document.querySelectorAll('.terminal-widget').forEach((el) => terminalObserver.observe(el));
+
+  // Watch for reveal elements added dynamically by Preact islands (client:visible)
+  const mutationObs = new MutationObserver((mutations) => {
+    for (const mutation of mutations) {
+      for (const node of mutation.addedNodes) {
+        if (!(node instanceof HTMLElement)) continue;
+        node.querySelectorAll<Element>('.reveal, .reveal-left, .reveal-right')
+          .forEach((el) => revealObserver.observe(el));
+        if (node.matches?.('.reveal, .reveal-left, .reveal-right')) {
+          revealObserver.observe(node);
+        }
+        node.querySelectorAll<HTMLElement>('[data-counter]')
+          .forEach((el) => counterObserver.observe(el));
+        node.querySelectorAll<Element>('[data-stagger]')
+          .forEach((el) => staggerObserver.observe(el));
+        node.querySelectorAll<Element>('.terminal-widget')
+          .forEach((el) => terminalObserver.observe(el));
+      }
+    }
+  });
+  mutationObs.observe(document.body, { childList: true, subtree: true });
 }
 
 export function initSmoothScroll(): void {

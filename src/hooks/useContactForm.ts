@@ -1,9 +1,38 @@
-import { useEffect } from 'preact/hooks';
+import { useReducer, useRef, useCallback } from 'preact/hooks';
 import { ContactService } from '../services/ContactService';
 import { langSignal } from '../services/LanguageService';
 
 const CONTACT_EMAIL = 'barrerodavid10@gmail.com';
 const contactService = new ContactService(CONTACT_EMAIL);
+
+// ── State machine ──────────────────────────────────────────────────────────────
+
+type FormStatus = 'idle' | 'sending' | 'success' | 'error';
+
+interface FormState {
+  status: FormStatus;
+  message: string;
+}
+
+type FormAction =
+  | { type: 'submit' }
+  | { type: 'success'; message: string }
+  | { type: 'error';   message: string }
+  | { type: 'reset' };
+
+const INITIAL: FormState = { status: 'idle', message: '' };
+
+function formReducer(state: FormState, action: FormAction): FormState {
+  switch (action.type) {
+    case 'submit':  return { status: 'sending', message: '' };
+    case 'success': return { status: 'success', message: action.message };
+    case 'error':   return { status: 'error',   message: action.message };
+    case 'reset':   return INITIAL;
+    default:        return state;
+  }
+}
+
+// ── Validation ─────────────────────────────────────────────────────────────────
 
 interface FieldRule { id: string; required: boolean; pattern?: RegExp; patternMsg?: string; }
 
@@ -29,76 +58,96 @@ function validateForm(form: HTMLFormElement): boolean {
       if (!errEl) {
         errEl = document.createElement('span');
         errEl.className = 'field-error';
+        errEl.id = `${id}-error`;
         errEl.setAttribute('role', 'alert');
         group.appendChild(errEl);
       }
       errEl.textContent = error;
+      field.setAttribute('aria-invalid', 'true');
       valid = false;
     } else {
       errEl?.remove();
+      field.setAttribute('aria-invalid', 'false');
     }
   });
   return valid;
 }
 
-export function useContactForm(): void {
-  useEffect(() => {
-    const form = document.getElementById('contactForm') as HTMLFormElement | null;
-    if (!form) return;
+// ── Public interface ───────────────────────────────────────────────────────────
 
-    const clearErr = (field: HTMLInputElement | HTMLTextAreaElement) => {
-      field.parentElement?.classList.remove('has-error');
-      field.parentElement?.querySelector('.field-error')?.remove();
-    };
+export interface ContactFormState {
+  status: FormStatus;
+  message: string;
+  isSending: boolean;
+}
 
-    FIELDS.forEach(({ id }) => {
-      const field = form.querySelector<HTMLInputElement | HTMLTextAreaElement>(`#${id}`);
-      field?.addEventListener('input',  () => clearErr(field));
-      field?.addEventListener('focus',  () => field.parentElement?.classList.add('focused'));
-      field?.addEventListener('blur',   () => { if (!field.value) field.parentElement?.classList.remove('focused'); });
-    });
+export interface ContactFormHandlers {
+  handleSubmit: (e: Event) => Promise<void>;
+  handleFieldInput: (e: Event) => void;
+  handleFieldFocus: (e: Event) => void;
+  handleFieldBlur:  (e: Event) => void;
+}
 
-    const onSubmit = async (e: Event) => {
-      e.preventDefault();
-      if (!validateForm(form)) return;
+export function useContactForm(): [ContactFormState, ContactFormHandlers] {
+  const [state, dispatch] = useReducer(formReducer, INITIAL);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-      const btn     = document.getElementById('submitBtn') as HTMLButtonElement;
-      const text    = document.getElementById('submitText')!;
-      const spinner = document.getElementById('submitLoading')!;
-      const status  = document.getElementById('formStatus')!;
-      const isEs    = langSignal.value === 'es';
+  const scheduleReset = (ms = 8000) => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => dispatch({ type: 'reset' }), ms);
+  };
 
-      btn.disabled          = true;
-      text.style.display    = 'none';
-      spinner.style.display = 'inline-block';
-      status.textContent    = '';
-      status.className      = 'form-status';
+  const handleSubmit = useCallback(async (e: Event) => {
+    e.preventDefault();
+    const form = e.currentTarget as HTMLFormElement;
+    if (!validateForm(form)) return;
 
-      try {
-        await contactService.submit({
-          name:    (form.querySelector('#name')    as HTMLInputElement).value.trim(),
-          email:   (form.querySelector('#email')   as HTMLInputElement).value.trim(),
-          subject: (form.querySelector('#subject') as HTMLInputElement).value.trim() || 'Portfolio contact',
-          message: (form.querySelector('#message') as HTMLTextAreaElement).value.trim(),
-        });
-        status.textContent = isEs ? '✓ ¡Mensaje enviado! Te respondo pronto.' : "✓ Message sent! I'll get back to you soon.";
-        status.className = 'form-status success';
-        form.reset();
-        form.querySelectorAll('.form-group').forEach(g => g.classList.remove('focused'));
-      } catch {
-        status.textContent = isEs
+    dispatch({ type: 'submit' });
+
+    const isEs = langSignal.value === 'es';
+    try {
+      await contactService.submit({
+        name:    (form.querySelector('#name')    as HTMLInputElement).value.trim(),
+        email:   (form.querySelector('#email')   as HTMLInputElement).value.trim(),
+        subject: (form.querySelector('#subject') as HTMLInputElement).value.trim() || 'Portfolio contact',
+        message: (form.querySelector('#message') as HTMLTextAreaElement).value.trim(),
+      });
+      dispatch({
+        type: 'success',
+        message: isEs
+          ? '✓ ¡Mensaje enviado! Te respondo pronto.'
+          : "✓ Message sent! I'll get back to you soon.",
+      });
+      form.reset();
+      form.querySelectorAll('.form-group').forEach(g => g.classList.remove('focused'));
+    } catch {
+      dispatch({
+        type: 'error',
+        message: isEs
           ? `✗ Error al enviar. Escríbeme a ${CONTACT_EMAIL}`
-          : `✗ Could not send. Email me directly at ${CONTACT_EMAIL}`;
-        status.className = 'form-status error';
-      } finally {
-        btn.disabled          = false;
-        text.style.display    = 'inline';
-        spinner.style.display = 'none';
-      }
-      setTimeout(() => { status.textContent = ''; status.className = 'form-status'; }, 8000);
-    };
-
-    form.addEventListener('submit', onSubmit);
-    return () => form.removeEventListener('submit', onSubmit);
+          : `✗ Could not send. Email me directly at ${CONTACT_EMAIL}`,
+      });
+    }
+    scheduleReset();
   }, []);
+
+  const handleFieldInput = useCallback((e: Event) => {
+    const field = e.currentTarget as HTMLInputElement | HTMLTextAreaElement;
+    field.parentElement?.classList.remove('has-error');
+    field.parentElement?.querySelector('.field-error')?.remove();
+  }, []);
+
+  const handleFieldFocus = useCallback((e: Event) => {
+    (e.currentTarget as HTMLInputElement).parentElement?.classList.add('focused');
+  }, []);
+
+  const handleFieldBlur = useCallback((e: Event) => {
+    const field = e.currentTarget as HTMLInputElement;
+    if (!field.value) field.parentElement?.classList.remove('focused');
+  }, []);
+
+  return [
+    { status: state.status, message: state.message, isSending: state.status === 'sending' },
+    { handleSubmit, handleFieldInput, handleFieldFocus, handleFieldBlur },
+  ];
 }

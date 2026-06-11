@@ -1,6 +1,5 @@
 import { signal, computed } from '@preact/signals';
 import { translations } from '../data/translations';
-import { ic } from '../shared/icons';
 import { appEvents } from '../shared/EventBus';
 import type { Lang } from '../domain';
 

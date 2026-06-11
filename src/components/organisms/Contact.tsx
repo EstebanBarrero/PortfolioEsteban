@@ -5,10 +5,13 @@ import { SectionLayout } from '../templates/SectionLayout';
 import { useContactForm } from '../../hooks/useContactForm';
 import { CONTACT_EMAIL, LINKEDIN_URL, LINKEDIN_DISPLAY, GITHUB_URL, WHATSAPP_URL } from '../../data/constants';
 import { t } from '../../services/LanguageService';
+import { translations } from '../../data/translations';
 
-export function Contact() {
-  const tNow = t.value;
-  useContactForm();
+interface Props { lang?: 'en' | 'es'; }
+
+export function Contact({ lang }: Props = {}) {
+  const tNow = lang ? translations[lang] : t.value;
+  const [{ status, message, isSending }, { handleSubmit, handleFieldInput, handleFieldFocus, handleFieldBlur }] = useContactForm();
 
   return (
     <SectionLayout id="contact" ariaLabelledBy="contact-heading">
@@ -52,41 +55,52 @@ export function Contact() {
         </div>
 
         <div class="contact-form-col reveal-right">
-          <form class="contact-form glass-card" id="contactForm" noValidate aria-label="Contact form">
+          <form class="contact-form glass-card" id="contactForm" noValidate
+            aria-label="Contact form" onSubmit={handleSubmit}>
 
             <div class="form-group">
               <label for="name" class="form-label">{tNow.contact.formName}</label>
               <input type="text" id="name" name="name" class="form-input"
                 placeholder={tNow.contact.formNamePlaceholder}
-                required autocomplete="name" aria-required="true" />
+                required autocomplete="name" aria-required="true" aria-describedby="name-error"
+                onInput={handleFieldInput} onFocus={handleFieldFocus} onBlur={handleFieldBlur} />
             </div>
 
             <div class="form-group">
               <label for="email" class="form-label">{tNow.contact.formEmail}</label>
               <input type="email" id="email" name="email" class="form-input"
                 placeholder="your@email.com"
-                required autocomplete="email" aria-required="true" />
+                required autocomplete="email" aria-required="true" aria-describedby="email-error"
+                onInput={handleFieldInput} onFocus={handleFieldFocus} onBlur={handleFieldBlur} />
             </div>
 
             <div class="form-group">
               <label for="subject" class="form-label">{tNow.contact.formSubject}</label>
               <input type="text" id="subject" name="subject" class="form-input"
-                placeholder={tNow.contact.formSubjectPlaceholder} />
+                placeholder={tNow.contact.formSubjectPlaceholder}
+                onInput={handleFieldInput} onFocus={handleFieldFocus} onBlur={handleFieldBlur} />
             </div>
 
             <div class="form-group">
               <label for="message" class="form-label">{tNow.contact.formMessage}</label>
               <textarea id="message" name="message" class="form-input form-textarea"
                 placeholder={tNow.contact.formMessagePlaceholder}
-                rows={5} required aria-required="true" />
+                rows={5} required aria-required="true" aria-describedby="message-error"
+                onInput={handleFieldInput} onFocus={handleFieldFocus} onBlur={handleFieldBlur} />
             </div>
 
-            <button type="submit" class="btn btn-primary form-submit" id="submitBtn">
-              <span id="submitText">{tNow.contact.formSubmit}</span>
-              <span id="submitLoading" class="submit-spinner" style="display:none;" aria-hidden="true" />
+            <button type="submit" class="btn btn-primary form-submit" disabled={isSending}>
+              {isSending
+                ? <span class="submit-spinner" aria-hidden="true" />
+                : <span>{tNow.contact.formSubmit}</span>
+              }
             </button>
 
-            <p id="formStatus" class="form-status" role="alert" aria-live="polite" />
+            {message && (
+              <p class={`form-status form-status--${status}`} role="alert" aria-live="polite">
+                {message}
+              </p>
+            )}
 
           </form>
         </div>

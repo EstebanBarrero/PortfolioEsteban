@@ -9,9 +9,9 @@ import { ORBIT_ICONS } from '../../data/constants';
 import { t, langSignal } from '../../services/LanguageService';
 
 const TypewriterContainer = memo(() => (
-  <div class="hero-typewriter" aria-live="polite">
+  <div class="hero-typewriter" aria-live="polite" aria-label="Current role">
     <span id="typewriter-text" class="tw-text" />
-    <span class="tw-cursor" aria-hidden>_</span>
+    <span class="tw-cursor" aria-hidden="true">_</span>
   </div>
 ));
 

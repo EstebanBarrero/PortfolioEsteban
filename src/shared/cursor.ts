@@ -16,23 +16,22 @@ export function initCursor(): void {
   let mx = -600, my = -600;
   let lx = -600, ly = -600;
   let visible = false;
-
-  document.addEventListener('mousemove', (e) => { mx = e.clientX; my = e.clientY; visible = true; });
-  document.addEventListener('mouseleave', () => { visible = false; });
-  document.addEventListener('mouseenter', () => { visible = true; });
+  let rafId = 0;
+  let lastMoveTime = 0;
 
   const TRAIL = 32;
+  const IDLE_MS = 500;
   const pts: Array<{ x: number; y: number }> = Array.from({ length: TRAIL }, () => ({ x: -600, y: -600 }));
 
   const DARK_COLORS: [number, number, number][] = [
-    [0, 245, 255],    // cyan
-    [255, 220, 0],    // yellow
-    [64, 160, 255],   // electric blue
+    [0, 245, 255],
+    [255, 220, 0],
+    [64, 160, 255],
   ];
   const LIGHT_COLORS: [number, number, number][] = [
-    [99, 102, 241],   // indigo
-    [234, 179, 8],    // amber
-    [14, 165, 233],   // sky
+    [99, 102, 241],
+    [234, 179, 8],
+    [14, 165, 233],
   ];
 
   function cycleColor(): [number, number, number] {
@@ -51,6 +50,7 @@ export function initCursor(): void {
   }
 
   function tick() {
+    rafId = 0;
     ctx.clearRect(0, 0, W, H);
 
     if (visible) {
@@ -67,15 +67,13 @@ export function initCursor(): void {
       const [r, g, b] = cycleColor();
       const c = `${r},${g},${b}`;
 
-      // Trail — back to front
       for (let i = TRAIL - 1; i >= 0; i--) {
         const t = 1 - i / (TRAIL - 1);
-        const e = t * t * t; // cubic — bright head, long dim tail
+        const e = t * t * t;
         if (e < 0.008) continue;
 
-        const rad = e * 9;        // max ~9 px core radius
+        const rad = e * 9;
 
-        // Glow halo
         const grd = ctx.createRadialGradient(pts[i].x, pts[i].y, 0, pts[i].x, pts[i].y, rad * 3.2);
         grd.addColorStop(0, `rgba(${c},${e * 0.28})`);
         grd.addColorStop(1, `rgba(${c},0)`);
@@ -84,14 +82,12 @@ export function initCursor(): void {
         ctx.fillStyle = grd;
         ctx.fill();
 
-        // Core particle
         ctx.beginPath();
         ctx.arc(pts[i].x, pts[i].y, Math.max(rad * 0.42, 0.4), 0, Math.PI * 2);
         ctx.fillStyle = `rgba(${c},${e * 0.95})`;
         ctx.fill();
       }
 
-      // Tip: bright glow at exact mouse
       const tipGrd = ctx.createRadialGradient(mx, my, 0, mx, my, 22);
       tipGrd.addColorStop(0,    `rgba(${c},0.85)`);
       tipGrd.addColorStop(0.3,  `rgba(${c},0.28)`);
@@ -101,15 +97,32 @@ export function initCursor(): void {
       ctx.fillStyle = tipGrd;
       ctx.fill();
 
-      // Crisp dot
       ctx.beginPath();
       ctx.arc(mx, my, 2.2, 0, Math.PI * 2);
       ctx.fillStyle = `rgba(${c},1)`;
       ctx.fill();
-    }
 
-    requestAnimationFrame(tick);
+      // Stop scheduling when lerp has converged and mouse has been idle long enough
+      const converged = Math.abs(mx - lx) < 0.5 && Math.abs(my - ly) < 0.5;
+      const idle = performance.now() - lastMoveTime > IDLE_MS;
+      if (!converged || !idle) {
+        rafId = requestAnimationFrame(tick);
+      }
+    }
   }
 
-  requestAnimationFrame(tick);
+  document.addEventListener('mousemove', (e) => {
+    mx = e.clientX;
+    my = e.clientY;
+    visible = true;
+    lastMoveTime = performance.now();
+    if (!rafId) rafId = requestAnimationFrame(tick);
+  });
+
+  document.addEventListener('mouseleave', () => {
+    visible = false;
+    ctx.clearRect(0, 0, W, H);
+  });
+
+  document.addEventListener('mouseenter', () => { visible = true; });
 }

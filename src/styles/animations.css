@@ -62,10 +62,10 @@
   to   { transform: rotate(-360deg) translateX(140px) rotate(360deg); }
 }
 
-@keyframes meshShift {
-  0%   { background-position: 0% 50%; }
-  50%  { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+@keyframes blobFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(40px, -30px) scale(1.03); }
+  66%       { transform: translate(-25px, 40px) scale(0.97); }
 }
 
 @keyframes textShimmer {
@@ -235,3 +235,21 @@
 .delay-600 { transition-delay: 600ms; }
 .delay-700 { transition-delay: 700ms; }
 .delay-800 { transition-delay: 800ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal,
+  .reveal-left,
+  .reveal-right {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
