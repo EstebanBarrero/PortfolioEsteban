@@ -1,0 +1,115 @@
+---
+import { translations } from '../../data/translations';
+import { ORBIT_ICONS } from '../../data/constants';
+import { PATHS } from '../../shared/icons';
+import { TypewriterIsland } from '../atoms/TypewriterIsland';
+
+interface Props { lang: 'en' | 'es'; }
+const { lang } = Astro.props;
+const t = translations[lang];
+const cvFile = lang === 'es' ? 'CV_Esteban.pdf' : 'cv_esteban_en.pdf';
+const innerIcons = ORBIT_ICONS.slice(0, 4);
+const outerIcons = ORBIT_ICONS.slice(4);
+---
+
+<section id="hero" aria-label="Hero">
+
+  <div class="hero-mesh" aria-hidden="true">
+    <div class="mesh-blob mesh-blob-1" />
+    <div class="mesh-blob mesh-blob-2" />
+    <div class="mesh-blob mesh-blob-3" />
+    <div class="mesh-grid" />
+  </div>
+
+  <div class="noise-overlay" aria-hidden="true" />
+  <div class="scan-line" aria-hidden="true" />
+
+  <div class="container hero-container">
+
+    <div class="hero-content">
+      <div class="hero-eyebrow reveal">
+        <span class="eyebrow-dot" />
+        <span>{t.hero.available}</span>
+      </div>
+
+      <h1 class="hero-heading reveal delay-100">
+        <span class="greeting">{t.hero.greeting}</span>
+        <span class="hero-name text-gradient-cyan">Esteban</span>
+      </h1>
+
+      <div class="hero-typewriter" aria-live="polite">
+        <span id="typewriter-text" class="tw-text" />
+        <span class="tw-cursor" aria-hidden="true">_</span>
+      </div>
+
+      <p class="hero-bio reveal delay-300" set:html={t.hero.bio} />
+
+      <div class="hero-cta reveal delay-400">
+        <a href="#projects" class="btn btn-primary">
+          <span>{t.hero.viewProjects}</span>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true" set:html={PATHS['arrow-right']} />
+        </a>
+        <a href={`/assets/${cvFile}`} download={cvFile} aria-label="Download CV" class="btn btn-outline">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true" set:html={PATHS['download']} />
+          <span>{t.hero.downloadCV}</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-visual reveal-right delay-200">
+      <div class="avatar-orbit-wrapper">
+        <div class="orbit-ring orbit-ring-outer" aria-hidden="true" />
+        <div class="orbit-ring orbit-ring-inner" aria-hidden="true" />
+
+        {innerIcons.map((item, i) => (
+          <div
+            class="orbit-icon orbit-inner-icon"
+            style={`--orbit-delay:${(i / 4) * 360}deg; --icon-color:${item.color};`}
+            aria-label={item.label}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" aria-hidden="true" set:html={PATHS[item.icon] ?? ''} />
+          </div>
+        ))}
+
+        {outerIcons.map((item, i) => (
+          <div
+            class="orbit-icon orbit-outer-icon"
+            style={`--orbit-delay:${(i / 4) * 360}deg; --icon-color:${item.color};`}
+            aria-label={item.label}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" aria-hidden="true" set:html={PATHS[item.icon] ?? ''} />
+          </div>
+        ))}
+
+        <div class="avatar-container">
+          <img
+            src="/avatar.webp"
+            alt="Esteban Barrero — Full-Stack & AI Developer"
+            class="avatar-img"
+            loading="eager"
+            decoding="sync"
+            width={160}
+            height={160}
+          />
+          <div class="avatar-glow" aria-hidden="true" />
+        </div>
+
+        <div class="status-badge" aria-label="Open to work">
+          <span class="status-dot" />
+          <span>{t.hero.openToWork}</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="scroll-indicator reveal" aria-label="Scroll down">
+    <span class="scroll-label">{t.hero.scroll}</span>
+    <div class="scroll-arrow">
+      <span /><span />
+    </div>
+  </div>
+
+</section>
+
+<TypewriterIsland client:load phrases={[...t.hero.typewriterPhrases]} />

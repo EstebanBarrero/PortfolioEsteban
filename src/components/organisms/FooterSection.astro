@@ -1,0 +1,96 @@
+---
+import { translations } from '../../data/translations';
+import { CONTACT_EMAIL, LINKEDIN_URL, GITHUB_URL, WHATSAPP_URL } from '../../data/constants';
+import { PATHS } from '../../shared/icons';
+
+interface Props { lang: 'en' | 'es'; }
+const { lang } = Astro.props;
+const t = translations[lang];
+const year = new Date().getFullYear();
+
+const ASCII_LOGO = ` ███████╗███████╗████████╗
+ ██╔════╝██╔════╝╚══██╔══╝
+ █████╗  ███████╗   ██║
+ ██╔══╝  ╚════██║   ██║
+ ███████╗███████║   ██║
+ ╚══════╝╚══════╝   ╚═╝`.trim();
+---
+
+<footer id="footer" role="contentinfo">
+  <div class="container footer-container">
+
+    <div class="footer-top">
+
+      <div class="footer-brand">
+        <pre class="ascii-logo" aria-label="EST logo">{ASCII_LOGO}</pre>
+        <p class="footer-tagline">
+          <span>{t.footer.tagline}</span><br />
+          <span class="text-cyan">Medellín, Colombia</span>
+        </p>
+      </div>
+
+      <nav class="footer-nav" aria-label="Footer navigation">
+        <span class="footer-nav-title">{t.footer.navTitle}</span>
+        <ul role="list">
+          <li><a href="#hero">{t.footer.home}</a></li>
+          <li><a href="#about">{t.footer.about}</a></li>
+          <li><a href="#skills">{t.footer.skills}</a></li>
+          <li><a href="#projects">{t.footer.projects}</a></li>
+          <li><a href="#experience">{t.footer.experience}</a></li>
+          <li><a href="#ai-showcase">{t.footer.ai}</a></li>
+          <li><a href="#contact">{t.footer.contact}</a></li>
+        </ul>
+      </nav>
+
+      <div class="footer-social">
+        <span class="footer-nav-title">{t.footer.connectTitle}</span>
+        <div class="social-links">
+          <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer" class="social-link" aria-label="GitHub profile">
+            <span class="social-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" aria-hidden="true" set:html={PATHS['github']} />
+            </span>
+            <span>GitHub</span>
+          </a>
+          <a href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer" class="social-link" aria-label="LinkedIn profile">
+            <span class="social-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" aria-hidden="true" set:html={PATHS['linkedin']} />
+            </span>
+            <span>LinkedIn</span>
+          </a>
+          <a href={`mailto:${CONTACT_EMAIL}`} class="social-link" aria-label="Email">
+            <span class="social-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" aria-hidden="true" set:html={PATHS['mail']} />
+            </span>
+            <span>Email</span>
+          </a>
+          <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" class="social-link" aria-label="WhatsApp">
+            <span class="social-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" aria-hidden="true" set:html={PATHS['message-circle']} />
+            </span>
+            <span>WhatsApp</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="footer-divider" aria-hidden="true" />
+
+    <div class="footer-bottom">
+      <p class="footer-credit"></p>
+      <p class="footer-copy">
+        &copy; {year} David Esteban Barrero. All rights reserved.
+      </p>
+      <button class="back-to-top" id="backToTop" aria-label="Back to top">
+        {t.footer.backToTop}
+      </button>
+    </div>
+
+  </div>
+</footer>
+
+<script>
+  document.getElementById('backToTop')?.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+</script>

@@ -1,0 +1,122 @@
+---
+import { translations } from '../../data/translations';
+import { PATHS } from '../../shared/icons';
+
+interface Props { lang: 'en' | 'es'; }
+const { lang } = Astro.props;
+const t = translations[lang];
+
+const AI_CARD_ICONS  = ['bot', 'brain', 'plug', 'book-open', 'cpu', 'flask-conical'] as const;
+const AI_CARD_COLORS = ['#10a37f', '#d4a464', '#8b5cf6', '#f59e0b', '#00f5ff', '#ff9900'];
+const AI_CARD_TAGS   = [
+  ['GPT-4o', 'Embeddings', 'Function Calling', 'Streaming'],
+  ['Claude Opus', 'Agent SDK', 'MCP', 'Tool Use'],
+  ['MCP Protocol', 'TypeScript', 'OAuth', 'Resources'],
+  ['LangChain', 'pgvector', 'Pinecone', 'Re-ranking'],
+  ['LangGraph', 'AutoGen', 'Claude SDK', 'Memory'],
+  ['Bedrock', 'SageMaker', 'Fine-tuning', 'Inference'],
+];
+
+const LLM_STRIP = [
+  { icon: 'bot',   label: 'OpenAI',      color: '#10a37f' },
+  { icon: 'brain', label: 'Anthropic',   color: '#d4a464' },
+  { icon: 'link',  label: 'LangChain',   color: '#326ce5' },
+  { icon: 'cloud', label: 'Bedrock',     color: '#ff9900' },
+  { icon: 'plug',  label: 'MCP',         color: '#8b5cf6' },
+  { icon: 'heart', label: 'HuggingFace', color: '#ffd21e' },
+] as const;
+
+const TERMINAL_LINES = [
+  { delay: 0,    type: 'prompt', text: '$ mcp connect --server filesystem --server postgres' },
+  { delay: 600,  type: 'output', text: '✓ MCP server "filesystem" connected' },
+  { delay: 900,  type: 'output', text: '✓ MCP server "postgres" connected' },
+  { delay: 1300, type: 'blank',  text: '' },
+  { delay: 1500, type: 'prompt', text: '$ claude chat --model claude-opus-4-6' },
+  { delay: 2100, type: 'ai',     text: 'Claude: How can I assist you today?' },
+  { delay: 2500, type: 'user',   text: 'User:   Query the users table and summarize trends.' },
+  { delay: 3200, type: 'output', text: '[Tool] postgres: SELECT * FROM users LIMIT 1000;' },
+  { delay: 4000, type: 'ai',     text: 'Claude: Analyzed 1,000 records. Top trend: 40% YoY' },
+  { delay: 4500, type: 'ai',     text: '        growth in API integrations since Q3 2024.' },
+  { delay: 5200, type: 'blank',  text: '' },
+  { delay: 5400, type: 'prompt', text: '$ openai chat --model gpt-4o --stream' },
+  { delay: 6000, type: 'output', text: 'Streaming response... ▊' },
+];
+
+type AiT = typeof t.ai;
+const getAiKey = (n: number, type: 'Title' | 'Desc') => `card${n}${type}` as keyof AiT;
+---
+
+<section id="ai-showcase" aria-labelledby="ai-heading">
+  <div class="container">
+
+    <div class="section-header reveal">
+      <span class="section-label">{t.ai.label}</span>
+      <h2 class="section-title" id="ai-heading">{t.ai.title}</h2>
+      <p class="section-subtitle">{t.ai.subtitle}</p>
+    </div>
+
+    <div class="ai-hero-split">
+
+      <div class="ai-terminal-col reveal-left">
+        <div class="terminal-widget glass-card" aria-label="Code terminal demo" role="img">
+          <div class="terminal-header">
+            <div class="term-dots">
+              <span class="term-dot red" />
+              <span class="term-dot yellow" />
+              <span class="term-dot green" />
+            </div>
+            <span class="term-title">claude-mcp-session</span>
+            <span class="term-badge">LIVE</span>
+          </div>
+          <div class="terminal-body" id="terminal-body">
+            {TERMINAL_LINES.map((line) => (
+              <div class={`term-line term-${line.type}`} style={`--line-delay:${line.delay}ms;`} aria-hidden="true">
+                {line.text}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div class="ai-intro-col reveal-right">
+        <div class="ai-headline">
+          <h3 class="ai-headline-text">
+            <span>{t.ai.headlineMain}</span><br />
+            <span class="text-gradient-cyan">{t.ai.headlineAccent}</span>
+          </h3>
+        </div>
+        <p class="ai-intro-text" set:html={t.ai.introPara1} />
+        <p class="ai-intro-text" set:html={t.ai.introPara2} />
+
+        <div class="llm-strip">
+          {LLM_STRIP.map(item => (
+            <div class="llm-badge" style={`--badge-color:${item.color};`}>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true" set:html={PATHS[item.icon] ?? ''} />
+              <span class="llm-badge-label">{item.label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+    </div>
+
+    <div class="ai-cards-grid">
+      {AI_CARD_ICONS.map((icon, idx) => {
+        const n = idx + 1;
+        return (
+          <div class="ai-card glass-card reveal" style={`--card-accent:${AI_CARD_COLORS[idx]};`}>
+            <div class="ai-card-icon" aria-hidden="true" style={`color:${AI_CARD_COLORS[idx]};`}>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="40" height="40" aria-hidden="true" set:html={PATHS[icon] ?? ''} />
+            </div>
+            <h3 class="ai-card-title">{t.ai[getAiKey(n, 'Title')] as string}</h3>
+            <p class="ai-card-desc">{t.ai[getAiKey(n, 'Desc')] as string}</p>
+            <div class="ai-card-tags">
+              {AI_CARD_TAGS[idx].map(tag => <span class="tech-tag">{tag}</span>)}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+
+  </div>
+</section>

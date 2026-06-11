@@ -4,9 +4,12 @@ import { SectionLayout } from '../templates/SectionLayout';
 import { useCarousel } from '../../hooks/useCarousel';
 import { projects } from '../../data/projects';
 import { t } from '../../services/LanguageService';
+import { translations } from '../../data/translations';
 
-export function Projects() {
-  const tNow = t.value;
+interface Props { lang?: 'en' | 'es'; }
+
+export function Projects({ lang }: Props = {}) {
+  const tNow = lang ? translations[lang] : t.value;
   useCarousel();
 
   return (

@@ -22,7 +22,7 @@
   border-radius: 50px;
   cursor: pointer;
   transition: all var(--transition-base);
-  backdrop-filter: blur(10px);
+  background: var(--color-bg-card);
 }
 
 .skills-tab:hover { color: var(--color-text); border-color: var(--color-border-hover); background: var(--color-bg-card); }

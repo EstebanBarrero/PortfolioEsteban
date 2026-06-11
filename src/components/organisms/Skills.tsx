@@ -7,6 +7,7 @@ import { SectionLayout } from '../templates/SectionLayout';
 import { skills, keySkills, softSkills } from '../../data/skills';
 import type { Skill } from '../../domain';
 import { t } from '../../services/LanguageService';
+import { translations } from '../../data/translations';
 
 type Category = Exclude<Skill['category'], 'soft'>;
 
@@ -22,9 +23,11 @@ const CATEGORY_COUNTS = Object.fromEntries(
   CATEGORIES.map(c => [c.id, skills.filter(s => s.category === c.id).length])
 ) as Record<Category, number>;
 
-export function Skills() {
+interface Props { lang?: 'en' | 'es'; }
+
+export function Skills({ lang }: Props = {}) {
   const [active, setActive] = useState<Category>('frontend');
-  const tNow = t.value;
+  const tNow = lang ? translations[lang] : t.value;
 
   return (
     <SectionLayout id="skills" ariaLabelledBy="skills-heading">
@@ -52,8 +55,8 @@ export function Skills() {
       </div>
 
       <div class="skills-grid" role="list" id="skills-grid">
-        {skills.map(skill => (
-          <SkillCard key={skill.name} skill={skill} active={skill.category === active} />
+        {skills.filter(s => s.category === active).map(skill => (
+          <SkillCard key={skill.name} skill={skill} />
         ))}
       </div>
 

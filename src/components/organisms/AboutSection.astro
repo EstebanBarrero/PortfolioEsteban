@@ -1,0 +1,118 @@
+---
+import { translations } from '../../data/translations';
+import { STATS, YEARS_EXP } from '../../data/constants';
+import { PATHS } from '../../shared/icons';
+
+interface Props { lang: 'en' | 'es'; }
+const { lang } = Astro.props;
+const t = translations[lang];
+const tAbout = t.about as unknown as Record<string, string>;
+
+// Pre-compute stat labels to avoid generics inside JSX
+const statLabels = STATS.map(s => tAbout[s.labelKey.split('.')[1]] ?? '');
+
+const FACTS = [
+  { icon: 'zap',    delay: 0,   title: tAbout['fact1Title'], desc: tAbout['fact1Desc'] },
+  { icon: 'brain',  delay: 200, title: tAbout['fact2Title'], desc: tAbout['fact2Desc'] },
+  { icon: 'rocket', delay: 400, title: tAbout['fact3Title'], desc: tAbout['fact3Desc'] },
+] as const;
+---
+
+<section id="about" aria-labelledby="about-heading">
+  <div class="container">
+
+    <div class="section-header reveal">
+      <span class="section-label">{t.about.label}</span>
+      <h2 class="section-title" id="about-heading">{t.about.title}</h2>
+    </div>
+
+    <div class="about-grid">
+
+      <div class="about-visual reveal-left">
+        <div class="about-img-wrapper">
+          <img
+            src="/IMG_0057-2.webp"
+            alt="Esteban Barrero — Full-Stack & AI Developer"
+            class="about-img"
+            loading="lazy"
+            decoding="async"
+            width={380}
+            height={460}
+          />
+
+          <div class="about-code-badge" aria-hidden="true">
+            <span class="code-badge-prefix">const</span>
+            <span class="code-badge-var"> dev</span>
+            <span class="code-badge-op"> = {'{'}</span><br />
+            <span class="code-badge-indent">  city: </span>
+            <span class="code-badge-str">"Medellín"</span><br />
+            <span class="code-badge-indent">  passion: </span>
+            <span class="code-badge-str">"AI + Code"</span><br />
+            <span class="code-badge-op">{'}'}</span>
+          </div>
+
+          <div class="about-years-badge">
+            <span class="years-number">{YEARS_EXP}+</span>
+            <span class="years-label">{t.about.yearsExp}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="about-content reveal-right">
+        <p class="about-bio" set:html={t.about.bio1} />
+        <p class="about-bio" set:html={t.about.bio2} />
+        <p class="about-bio" set:html={t.about.bio3} />
+
+        <div class="divider" />
+
+        <div class="about-stats">
+          {STATS.map((s, i) => (
+            <div class="about-stat">
+              {s.value === null ? (
+                <span class="stat-number text-gradient-cyan">∞</span>
+              ) : (
+                <span
+                  class="stat-number text-gradient-cyan"
+                  data-counter={s.value}
+                  data-counter-suffix={s.suffix}
+                >
+                  {s.value}{s.suffix}
+                </span>
+              )}
+              <span class="stat-label">{statLabels[i]}</span>
+            </div>
+          ))}
+        </div>
+
+        <div class="about-languages">
+          <span class="about-lang-item">
+            <span class="lang-flag">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true" set:html={PATHS['globe']} />
+            </span>
+            <span set:html={t.about.langSpanish} />
+          </span>
+          <span class="about-lang-item">
+            <span class="lang-flag">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true" set:html={PATHS['globe']} />
+            </span>
+            <span set:html={t.about.langEnglish} />
+          </span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="about-facts" data-stagger>
+      {FACTS.map((f) => (
+        <div class={`fact-card glass-card reveal${f.delay ? ` delay-${f.delay}` : ''}`} data-stagger-child>
+          <span class="fact-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="28" height="28" aria-hidden="true" set:html={PATHS[f.icon]} />
+          </span>
+          <h3 class="fact-title">{f.title}</h3>
+          <p class="fact-desc">{f.desc}</p>
+        </div>
+      ))}
+    </div>
+
+  </div>
+</section>

@@ -20,28 +20,29 @@
   position: absolute;
   border-radius: 50%;
   filter: blur(90px);
-  animation: meshShift 16s ease-in-out infinite;
+  will-change: transform;
+  animation: blobFloat 40s ease-in-out infinite;
 }
 
 .mesh-blob-1 {
   width: 700px; height: 700px;
   background: radial-gradient(circle, rgba(99, 102, 241, 0.18) 0%, transparent 70%);
   top: -180px; left: -120px;
-  animation-duration: 18s;
+  animation-duration: 40s;
 }
 .mesh-blob-2 {
   width: 550px; height: 550px;
   background: radial-gradient(circle, rgba(124, 58, 237, 0.12) 0%, transparent 70%);
   bottom: -100px; right: -80px;
-  animation-duration: 22s;
-  animation-delay: -8s;
+  animation-duration: 50s;
+  animation-delay: -18s;
 }
 .mesh-blob-3 {
   width: 400px; height: 400px;
   background: radial-gradient(circle, rgba(8, 145, 178, 0.09) 0%, transparent 70%);
   top: 45%; left: 52%;
-  animation-duration: 26s;
-  animation-delay: -14s;
+  animation-duration: 60s;
+  animation-delay: -30s;
 }
 
 [data-theme="dark"] .mesh-blob-1 {
@@ -168,8 +169,7 @@
   border: 1px solid var(--color-border);
   border-radius: 50px;
   color: var(--color-text-muted);
-  background: var(--color-bg-glass);
-  backdrop-filter: blur(10px);
+  background: var(--color-bg-card);
 }
 
 .hero-visual {
@@ -190,6 +190,7 @@
   transform: translate(-50%, -50%);
   border-radius: 50%;
   border: 1px solid var(--color-border);
+  will-change: transform;
   animation: spinSlow linear infinite;
 }
 .orbit-ring-inner { width: 260px; height: 260px; animation-duration: 24s; }
@@ -206,10 +207,10 @@
   border-radius: 50%;
   background: var(--color-bg-card);
   border: 1px solid var(--color-border);
-  backdrop-filter: blur(12px);
   transform: translate(-50%, -50%);
   z-index: 4;
   box-shadow: var(--shadow-sm);
+  will-change: transform;
 }
 .orbit-inner-icon {
   animation: orbit 24s linear infinite;
@@ -234,6 +235,7 @@
   object-position: center 15%;
   border: 3px solid var(--color-bg);
   box-shadow: 0 0 0 3px var(--color-primary), 0 0 0 6px var(--color-primary-dim), var(--shadow-xl);
+  will-change: transform;
   animation: float 5s ease-in-out infinite;
 }
 
@@ -269,7 +271,6 @@
   font-size: var(--fs-xs);
   font-weight: var(--fw-medium);
   color: var(--color-success);
-  backdrop-filter: blur(16px);
   z-index: 6;
   white-space: nowrap;
   box-shadow: var(--shadow-md);
